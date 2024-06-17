@@ -37,7 +37,7 @@ func SuccessResponse(data entity.MongoResul) MongoOutput {
 
 func ErrorResponse(data entity.MongoResul) errorOuput {
 	return errorOuput{
-		"Error":   data,
-		"Message": data,
+		"Error":   data.Error,
+		"Message": data.Reason,
 	}
 }

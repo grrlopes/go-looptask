@@ -33,7 +33,7 @@ func Login() gin.HandlerFunc {
 
 		if err != nil {
 			error := presenters.LoginError(payload)
-			c.JSON(http.StatusInternalServerError, error)
+			c.JSON(http.StatusUnauthorized, error)
 			return
 		}
 

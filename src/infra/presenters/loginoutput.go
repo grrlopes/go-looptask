@@ -5,32 +5,31 @@ import (
 	"github.com/grrlopes/go-looptask/src/domain/validator"
 )
 
-type LoginMongoOutput struct {
-	Data map[string]interface{} `json:"data"`
-}
-
-func LoginSuccess(data map[string]interface{}) LoginMongoOutput {
-	return LoginMongoOutput{
-		Data: data,
-	}
+func LoginSuccess(data map[string]interface{}) map[string]interface{} {
+	return data
 }
 
 func LoginError(data entity.Users) errorOuput {
 	return errorOuput{
-		"Error":   data,
-		"Message": data,
+		"error": "Invalid: You must provide a valid credencials.",
+		"message": map[string]interface{}{
+			"email":    data.Email,
+			"password": data.Password,
+		},
+		"success": false,
 	}
 }
 
 func LoginValidField(data validator.FieldValidation) errorOuput {
-	mHoney := []string{}
+	errorout := []string{}
 
 	for _, v := range data.Message {
-		mHoney = append(mHoney, v.Error())
+		errorout = append(errorout, v.Error())
 	}
 
 	return errorOuput{
-		"Error":   data.Error,
-		"Message": mHoney,
+		"error":   data.Error,
+		"message": errorout,
+		"success": false,
 	}
 }
