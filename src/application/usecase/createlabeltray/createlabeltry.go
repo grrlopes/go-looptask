@@ -1,4 +1,4 @@
-package listalltrays
+package createlabeltray
 
 import (
 	"github.com/grrlopes/go-looptask/src/domain/entity"
@@ -16,7 +16,7 @@ func NewListAllTrays(repo repository.IMongoTrayRepo) InputBoundary {
 }
 
 func (e execute) Execute(data *entity.Labeled) (entity.MongoResul, error) {
-	result, _ := e.repository.ListAllTrays(data)
+	result, _ := e.repository.CreateLabelTray(data)
 
 	return result, nil
 }

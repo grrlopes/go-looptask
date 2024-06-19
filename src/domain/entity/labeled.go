@@ -9,7 +9,7 @@ import (
 type Labeled struct {
 	ID        primitive.ObjectID `json:"id" bson:"_id"`
 	UserID    primitive.ObjectID `json:"user_id" validate:"required" bson:"user_id"`
-	User      *Users             `json:"user,omitempty" bson:"user,omitempty"`
+	User      Users             `json:"user,omitempty" bson:"user,omitempty"`
 	Trays     Tray               `json:"trays" bson:"trays"`
 	CreatedAt time.Time          `json:"created_at" bson:"created_at"`
 	UpdatedAt time.Time          `json:"updated_at" bson:"updated_at"`
