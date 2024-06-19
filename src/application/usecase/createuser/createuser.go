@@ -1,4 +1,4 @@
-package usersave
+package createuser
 
 import (
 	"errors"
@@ -11,12 +11,12 @@ import (
 )
 
 type execute struct {
-	findRepository repository.IMongoUserRepo
+	repository repository.IMongoUserRepo
 }
 
 func NewUserSave(repo repository.IMongoUserRepo) InputBoundary {
 	return execute{
-		findRepository: repo,
+		repository: repo,
 	}
 }
 
@@ -26,7 +26,7 @@ func (e execute) Execute(data *entity.Users) (entity.MongoResul, error) {
 	data.UpdatedAt = time.Now()
 	data.Password, _ = helper.CreatePassword(data)
 
-	res, _ := e.findRepository.FindUserByEmailandUser(data)
+	res, _ := e.repository.FindUserByEmailandUser(data)
 
 	if res.Email != "" {
 		error := errors.New(fmt.Sprintf("%s", "This email is already used."))
@@ -34,7 +34,7 @@ func (e execute) Execute(data *entity.Users) (entity.MongoResul, error) {
 		return resul, error
 	}
 
-	result, err := e.findRepository.UserSave(data)
+	result, err := e.repository.CreateUser(data)
 
 	if err != nil {
 		return entity.MongoResul{}, err

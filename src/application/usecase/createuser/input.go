@@ -1,4 +1,4 @@
-package usersave
+package createuser
 
 import "github.com/grrlopes/go-looptask/src/domain/entity"
 

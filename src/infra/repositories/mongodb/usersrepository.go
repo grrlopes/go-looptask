@@ -26,7 +26,7 @@ func NewUserRepository() repository.IMongoUserRepo {
 	}
 }
 
-func (db *users) UserSave(data *entity.Users) (entity.MongoResul, error) {
+func (db *users) CreateUser(data *entity.Users) (entity.MongoResul, error) {
 	pipeline := bson.D{
 		{
 			Key: "author", Value: data.Author,

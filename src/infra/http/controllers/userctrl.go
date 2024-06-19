@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/grrlopes/go-looptask/src/application/usecase/usersave"
+	"github.com/grrlopes/go-looptask/src/application/usecase/createuser"
 	"github.com/grrlopes/go-looptask/src/domain/entity"
 	"github.com/grrlopes/go-looptask/src/domain/repository"
 	"github.com/grrlopes/go-looptask/src/domain/validator"
@@ -14,7 +14,7 @@ import (
 
 var (
 	repositoryUser    repository.IMongoUserRepo = mongodb.NewUserRepository()
-	usecaseCreateUser usersave.InputBoundary    = usersave.NewUserSave(repositoryUser)
+	usecaseCreateUser createuser.InputBoundary    = createuser.NewUserSave(repositoryUser)
 )
 
 func CreateUser() gin.HandlerFunc {
