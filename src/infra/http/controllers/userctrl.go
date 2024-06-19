@@ -33,7 +33,7 @@ func CreateUser() gin.HandlerFunc {
 
 		if err != nil {
 			error := presenters.CreateLoginError(payload, result)
-			c.JSON(http.StatusOK, error)
+			c.JSON(http.StatusUnprocessableEntity, error)
 			return
 		}
 
