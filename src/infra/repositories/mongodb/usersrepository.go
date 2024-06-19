@@ -2,7 +2,6 @@ package mongodb
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/grrlopes/go-looptask/src/domain/entity"
 	"github.com/grrlopes/go-looptask/src/domain/repository"
@@ -45,16 +44,15 @@ func (db *users) UserSave(data *entity.Users) (entity.MongoResul, error) {
 			Key: "updated_at", Value: data.UpdatedAt,
 		},
 	}
-	fmt.Println(data.Email)
 
-	_, err := db.con.InsertOne(context.TODO(), pipeline)
-	fmt.Println(err, "ppppp##{{{{}}}}")
+	res, err := db.con.InsertOne(context.TODO(), pipeline)
+
 	if err != nil {
 		return entity.MongoResul{}, err
 	}
 
 	var result entity.MongoResul
-	result.Reason = "created!"
+	result.ID = res.InsertedID
 
 	return result, err
 }
@@ -65,6 +63,25 @@ func (db *users) FindUserByName(user *entity.Users) (entity.Users, error) {
 		Key:   "author",
 		Value: user.Author,
 	}}).Decode(&result)
+	if err != nil {
+		return result, err
+	}
+
+	return result, nil
+}
+
+func (db *users) FindUserByEmailandUser(user *entity.Users) (entity.Users, error) {
+	var result entity.Users
+	err := db.con.FindOne(context.TODO(), bson.D{
+		{
+			Key:   "author",
+			Value: user.Author,
+		},
+		{
+			Key:   "email",
+			Value: user.Email,
+		},
+	}).Decode(&result)
 	if err != nil {
 		return result, err
 	}

@@ -21,13 +21,14 @@ type Count struct {
 }
 
 type MongoResul struct {
-	TotalRows int    `json:"total_rows"`
-	Offset    int    `json:"offset"`
-	Rows      []rows `json:"rows"`
-	Error     string `json:"error"`
-	Reason    string `json:"reason"`
+	ID        interface{} `json:"id" bson:"_id"`
+	TotalRows int         `json:"total_rows"`
+	Offset    int         `json:"offset"`
+	Rows      []rows      `json:"rows"`
+	Error     string      `json:"error"`
+	Reason    string      `json:"reason"`
 }
 
 type rows struct {
-	ID    string `json:"id"`
+	ID string `json:"id"`
 }

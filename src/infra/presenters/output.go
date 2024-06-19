@@ -6,6 +6,7 @@ import (
 )
 
 type errorOuput map[string]interface{}
+type output map[string]interface{}
 
 type MongoOutput struct {
 	TotalRows int              `json:"total_rows"`
@@ -26,13 +27,10 @@ func ValidFieldResponse(data validator.FieldValidation) errorOuput {
 	}
 }
 
-func SuccessResponse(data entity.MongoResul) MongoOutput {
-
-	return MongoOutput{
-		// TotalRows: int(count.Total_rows),
-		// Offset:    int(count.Offset),
-		// Data: 
-	}
+func SuccessResponse(data entity.MongoResul) output {
+  return output{
+    "message": data.Reason,
+  }
 }
 
 func ErrorResponse(data entity.MongoResul) errorOuput {

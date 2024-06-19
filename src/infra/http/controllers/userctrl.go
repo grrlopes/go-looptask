@@ -32,12 +32,12 @@ func CreateUser() gin.HandlerFunc {
 		result, err := usecaseCreateUser.Execute(&payload)
 
 		if err != nil {
-			error := presenters.ErrorResponse(result)
-			c.JSON(http.StatusInternalServerError, error)
+			error := presenters.CreateLoginError(payload, result)
+			c.JSON(http.StatusOK, error)
 			return
 		}
 
-		data := presenters.SuccessResponse(result)
+		data := presenters.CreateLoginSuccess(payload, result)
 
 		c.JSON(http.StatusOK, data)
 	}
