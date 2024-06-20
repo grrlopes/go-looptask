@@ -23,7 +23,6 @@ type FieldValidation struct {
 }
 
 type _validate interface {
-		entity.Tray |
 		entity.Labeled |
 		entity.Users
 }

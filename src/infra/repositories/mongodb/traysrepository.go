@@ -2,10 +2,12 @@ package mongodb
 
 import (
 	"context"
+	"time"
 
 	"github.com/grrlopes/go-looptask/src/domain/entity"
 	"github.com/grrlopes/go-looptask/src/domain/repository"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -29,25 +31,28 @@ func (db *trays) ListAllTrays(data *entity.Labeled) (entity.MongoResul, error) {
 	panic("unimplemented")
 }
 func (db *trays) CreateLabelTray(data *entity.Labeled) (entity.MongoResul, error) {
+	trays := bson.A{}
+	for _, tray := range data.Trays {
+		trays = append(trays, bson.D{
+			{Key: "_id", Value: primitive.NewObjectID()},
+			{Key: "trayid", Value: tray.TrayId},
+			{Key: "size", Value: tray.Size},
+			{Key: "userid", Value: tray.UserId},
+			{Key: "done", Value: tray.Done},
+		})
+	}
 	pipeline := bson.D{
 		{
-			Key: "id", Value: data.ID,
+			Key: "trays", Value: trays,
 		},
 		{
-			Key: "tray", Value: bson.D{
-				{
-					Key: "id", Value: data.Trays.Id,
-				},
-				{
-					Key: "trayid", Value: data.Trays.TrayId,
-				},
-				{
-					Key: "size", Value: data.Trays.Size,
-				},
-				{
-					Key: "done", Value: data.Trays.Done,
-				},
-			},
+			Key: "owner", Value: data.Owner,
+		},
+		{
+			Key: "created_at", Value: time.Now(),
+		},
+		{
+			Key: "updated_at", Value: time.Now(),
 		},
 	}
 

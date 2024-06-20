@@ -21,3 +21,6 @@ func UserCtrl(app gin.IRouter) {
 	app.POST("/createuser", controllers.CreateUser())
 }
 
+func LabelCtrl(app gin.IRouter) {
+	app.POST("/createlabel", controllers.CreateLabelTray())
+}
