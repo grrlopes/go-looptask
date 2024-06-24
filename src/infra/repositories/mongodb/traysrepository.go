@@ -30,7 +30,7 @@ func NewTrayRepository() repository.IMongoTrayRepo {
 func (db *trays) ListAllTrays(data *entity.Labeled) (entity.MongoResul, error) {
 	panic("unimplemented")
 }
-func (db *trays) CreateLabelTray(data *entity.Labeled) (entity.MongoResul, error) {
+func (db *trays) CreateLabelTray(data *entity.Labeled) (string, error) {
 	trays := bson.A{}
 	for _, tray := range data.Trays {
 		trays = append(trays, bson.D{
@@ -56,12 +56,10 @@ func (db *trays) CreateLabelTray(data *entity.Labeled) (entity.MongoResul, error
 		},
 	}
 
-	_, err := db.con.InsertOne(context.TODO(), pipeline)
+	res, err := db.con.InsertOne(context.TODO(), pipeline)
 	if err != nil {
-		return entity.MongoResul{}, err
+		return "", err
 	}
 
-	var result entity.MongoResul
-
-	return result, err
+	return res.InsertedID.(primitive.ObjectID).Hex(), err
 }

@@ -23,7 +23,7 @@ type MongoResul struct {
 	ID        interface{} `json:"id" bson:"_id"`
 	TotalRows int         `json:"total_rows"`
 	Offset    int         `json:"offset"`
-	Rows      []rows      `json:"rows"`
+	Rows      []Tray      `json:"rows"`
 	Error     string      `json:"error"`
 	Reason    string      `json:"reason"`
 }

@@ -29,7 +29,7 @@ func CreateLabelTray() gin.HandlerFunc {
 			return
 		}
 
-		_, err = usecaseCreateLabelTray.Execute(&payload)
+		result, err := usecaseCreateLabelTray.Execute(&payload)
 
 		if err != nil {
 			error := presenters.CreateLabelTrayError(payload)
@@ -37,7 +37,7 @@ func CreateLabelTray() gin.HandlerFunc {
 			return
 		}
 
-		data := presenters.CreateLabelTraySuccess(payload)
+		data := presenters.CreateLabelTraySuccess(payload, result)
 
 		c.JSON(http.StatusOK, data)
 	}
