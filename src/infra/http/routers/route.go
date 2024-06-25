@@ -24,3 +24,7 @@ func UserCtrl(app gin.IRouter) {
 func LabelCtrl(app gin.IRouter) {
 	app.POST("/createlabel", controllers.CreateLabelTray())
 }
+
+func FetchOneTrayCtrl(app gin.IRouter) {
+	app.POST("/fetchonelabel", controllers.FetchOneTray())
+}

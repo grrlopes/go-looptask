@@ -1,4 +1,3 @@
-
 package validator
 
 import (
@@ -12,8 +11,8 @@ import (
 )
 
 type FindAllOutput struct {
-	TotalRows int            `json:"total_rows"`
-	Offset    int            `json:"offset"`
+	TotalRows int              `json:"total_rows"`
+	Offset    int              `json:"offset"`
 	Data      []entity.Labeled `json:"data"`
 }
 
@@ -23,8 +22,9 @@ type FieldValidation struct {
 }
 
 type _validate interface {
-		entity.Labeled |
-		entity.Users
+	entity.Labeled |
+		entity.Users |
+		entity.Tray
 }
 
 func Validate[T _validate](entity *T) (error bool, field FieldValidation) {

@@ -16,7 +16,8 @@ func main() {
 
 	routers.AuthCtrl(app)
 	routers.UserCtrl(app)
-  routers.LabelCtrl(app)
+	routers.LabelCtrl(app)
+	routers.FetchOneTrayCtrl(app)
 
 	server.Run()
 }

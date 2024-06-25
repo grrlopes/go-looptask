@@ -2,6 +2,7 @@ package mongodb
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/grrlopes/go-looptask/src/domain/entity"
@@ -27,6 +28,25 @@ func NewTrayRepository() repository.IMongoTrayRepo {
 		con: db,
 	}
 }
+
+func (db *trays) Fetchtraybyid(data *entity.Tray) (entity.Labeled, error) {
+	var result entity.Labeled
+	err := db.con.FindOne(context.TODO(), bson.D{{
+		Key:   "_id",
+		Value: data.Id,
+	}}).Decode(&result)
+
+	if len(result.Trays) == 0 {
+    return result, errors.New("No record found")
+  }
+
+	if err != nil {
+		return result, err
+	}
+
+	return result, nil
+}
+
 func (db *trays) ListAllTrays(data *entity.Labeled) (entity.MongoResul, error) {
 	panic("unimplemented")
 }
