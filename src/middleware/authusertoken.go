@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/grrlopes/go-looptask/src/helper"
+	"github.com/grrlopes/go-looptask/src/infra/presenters"
 )
 
 func AuthUserToken() gin.HandlerFunc {
@@ -12,7 +13,8 @@ func AuthUserToken() gin.HandlerFunc {
 		tokenString := helper.ExtractToken(c)
 		err := helper.VerifyJwt(tokenString)
 		if err != nil {
-			c.JSON(http.StatusUnauthorized, "Unauthorized")
+      authFailed := presenters.AuthError()
+			c.JSON(http.StatusUnauthorized, authFailed)
 			c.Abort()
 			return
 		}

@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/grrlopes/go-looptask/src/infra/http/controllers"
+	"github.com/grrlopes/go-looptask/src/middleware"
 )
 
 func AuthCtrl(app gin.IRouter) {
@@ -23,8 +24,5 @@ func UserCtrl(app gin.IRouter) {
 
 func LabelCtrl(app gin.IRouter) {
 	app.POST("/createlabel", controllers.CreateLabelTray())
-}
-
-func FetchOneTrayCtrl(app gin.IRouter) {
-	app.POST("/fetchonelabel", controllers.FetchOneTray())
+	app.POST("/fetchonelabel", middleware.AuthUserToken(), controllers.FetchOneTray())
 }
