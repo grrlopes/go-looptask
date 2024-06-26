@@ -18,7 +18,7 @@ var (
 	usecaseCreateLabelTray createlabeltray.InputBoundary = createlabeltray.NewListAllTrays(repositoryLabelTray)
 )
 
-func CreateLabelTray() gin.HandlerFunc {
+func CreateTray() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var payload entity.Labeled
 		err := c.ShouldBindJSON(&payload)
