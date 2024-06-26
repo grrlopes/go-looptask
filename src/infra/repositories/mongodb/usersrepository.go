@@ -88,3 +88,19 @@ func (db *users) FindUserByEmailandUser(user *entity.Users) (entity.Users, error
 
 	return result, nil
 }
+
+func (db *users) FindUserById(user *entity.Users) (entity.Users, error) {
+	var result entity.Users
+	err := db.con.FindOne(context.TODO(), bson.D{
+		{
+			Key:   "_id",
+			Value: user.ID,
+		},
+	}).Decode(&result)
+	if err != nil {
+		return result, err
+	}
+
+	return result, nil
+
+}
