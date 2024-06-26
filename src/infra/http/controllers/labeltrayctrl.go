@@ -8,6 +8,7 @@ import (
 	"github.com/grrlopes/go-looptask/src/domain/entity"
 	"github.com/grrlopes/go-looptask/src/domain/repository"
 	"github.com/grrlopes/go-looptask/src/domain/validator"
+	"github.com/grrlopes/go-looptask/src/helper"
 	"github.com/grrlopes/go-looptask/src/infra/presenters"
 	"github.com/grrlopes/go-looptask/src/infra/repositories/mongodb"
 )
@@ -28,6 +29,9 @@ func CreateLabelTray() gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, fieldErr)
 			return
 		}
+
+		userInfo := helper.GetUserInfoJwt(helper.ExtractToken(c))
+		payload.Owner = userInfo.ID
 
 		result, err := usecaseCreateLabelTray.Execute(&payload)
 

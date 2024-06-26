@@ -29,7 +29,7 @@ func FetchOneTray() gin.HandlerFunc {
 			return
 		}
 
-    result, err := usecaseFetchOneTray.Execute(&payload)
+		result, err := usecaseFetchOneTray.Execute(&payload)
 
 		if err != nil {
 			error := presenters.FetchOneLabelTrayError(payload, err)

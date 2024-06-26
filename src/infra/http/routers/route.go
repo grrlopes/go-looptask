@@ -23,6 +23,6 @@ func UserCtrl(app gin.IRouter) {
 }
 
 func LabelCtrl(app gin.IRouter) {
-	app.POST("/createlabel", controllers.CreateLabelTray())
-	app.POST("/fetchonelabel", middleware.AuthUserToken(), controllers.FetchOneTray())
+	app.POST("/createlabel", middleware.AuthUserToken(), controllers.CreateLabelTray())
+	app.GET("/fetchonelabel", middleware.AuthUserToken(), controllers.FetchOneTray())
 }

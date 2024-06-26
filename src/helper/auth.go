@@ -96,3 +96,16 @@ func ExtractToken(c *gin.Context) string {
 
 	return ""
 }
+
+func GetUserInfoJwt(tokenString string) entity.Users {
+	var userInfo entity.Users
+	jwt.ParseWithClaims(
+		tokenString,
+		&userInfo,
+		func(token *jwt.Token) (interface{}, error) {
+			return []byte(os.Getenv("JWTKEY")), nil
+		},
+	)
+
+	return userInfo
+}
