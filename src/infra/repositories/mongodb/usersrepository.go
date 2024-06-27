@@ -29,7 +29,10 @@ func NewUserRepository() repository.IMongoUserRepo {
 func (db *users) CreateUser(data *entity.Users) (entity.MongoResul, error) {
 	pipeline := bson.D{
 		{
-			Key: "author", Value: data.Author,
+			Key: "name", Value: data.Name,
+		},
+		{
+			Key: "surname", Value: data.Surname,
 		},
 		{
 			Key: "email", Value: data.Email,
@@ -60,8 +63,8 @@ func (db *users) CreateUser(data *entity.Users) (entity.MongoResul, error) {
 func (db *users) FindUserByName(user *entity.Users) (entity.Users, error) {
 	var result entity.Users
 	err := db.con.FindOne(context.TODO(), bson.D{{
-		Key:   "author",
-		Value: user.Author,
+		Key:   "email",
+		Value: user.Email,
 	}}).Decode(&result)
 	if err != nil {
 		return result, err
@@ -74,8 +77,8 @@ func (db *users) FindUserByEmailandUser(user *entity.Users) (entity.Users, error
 	var result entity.Users
 	err := db.con.FindOne(context.TODO(), bson.D{
 		{
-			Key:   "author",
-			Value: user.Author,
+			Key:   "name",
+			Value: user.Name,
 		},
 		{
 			Key:   "email",

@@ -9,7 +9,8 @@ import (
 
 type Users struct {
 	ID        primitive.ObjectID `json:"id" bson:"_id"`
-	Author    string             `json:"author" validate:"required,min=4,max=100" bson:"author"`
+	Name      string             `json:"name" validate:"required,min=4,max=100" bson:"name"`
+	Surname   string             `json:"surname" validate:"required,min=4,max=100" bson:"surname"`
 	Email     string             `json:"email" validate:"required,email" bson:"email"`
 	Password  string             `json:"password" validate:"required" bson:"password"`
 	CreatedAt time.Time          `json:"created_at" bson:"created_at"`

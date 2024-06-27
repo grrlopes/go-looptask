@@ -6,8 +6,10 @@ func CreateLoginSuccess(user entity.Users, result entity.MongoResul) output {
 	return output{
 		"error": nil,
 		"message": map[string]interface{}{
-			"id":    result.ID,
-			"email": user.Email,
+			"id":      result.ID,
+			"name":    user.Name,
+			"surname": user.Surname,
+			"email":   user.Email,
 		},
 		"success": true,
 	}
@@ -17,8 +19,9 @@ func CreateLoginError(user entity.Users, result entity.MongoResul) output {
 	return output{
 		"error": result.Error,
 		"message": map[string]interface{}{
-			"author": user.Author,
-			"email":  user.Email,
+			"name":    user.Name,
+			"surname": user.Surname,
+			"email":   user.Email,
 		},
 		"success": false,
 	}

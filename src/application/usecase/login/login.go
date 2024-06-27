@@ -44,7 +44,8 @@ func (e execute) Execute(data *entity.Users) (OutputBoundary, error) {
 
 	output := OutputBoundary{
 		"id":         result.ID,
-		"author":     result.Author,
+		"name":       result.Name,
+		"surname":    result.Surname,
 		"email":      result.Email,
 		"created_at": result.CreatedAt,
 		"updated_at": result.UpdatedAt,

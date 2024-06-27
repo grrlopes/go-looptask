@@ -36,7 +36,8 @@ func GenerateJwt(user *entity.Users) (string, error) {
 	claims := &entity.Users{
 		ID:        user.ID,
 		Email:     user.Email,
-		Author:    user.Author,
+		Name:      user.Name,
+		Surname:   user.Surname,
 		Password:  "***",
 		CreatedAt: user.CreatedAt,
 		UpdatedAt: user.UpdatedAt,

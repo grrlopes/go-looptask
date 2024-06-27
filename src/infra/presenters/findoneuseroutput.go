@@ -6,9 +6,10 @@ func FetchOneUserSuccess(user entity.Users) output {
 	return output{
 		"error": nil,
 		"message": map[string]interface{}{
-			"id":     user.ID.Hex(),
-			"author": user.Author,
-			"email":  user.Email,
+			"id":      user.ID.Hex(),
+			"name":    user.Name,
+			"surname": user.Surname,
+			"email":   user.Email,
 		},
 		"success": true,
 	}
@@ -18,8 +19,9 @@ func FetchOneUserError(user entity.Users) output {
 	return output{
 		"error": nil,
 		"message": map[string]interface{}{
-			"author": user.Author,
-			"email":  user.Email,
+			"name":    user.Name,
+			"surname": user.Surname,
+			"email":   user.Email,
 		},
 		"success": false,
 	}

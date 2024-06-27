@@ -37,8 +37,8 @@ func (db *trays) Fetchtraybyid(data *entity.Tray) (entity.Labeled, error) {
 	}}).Decode(&result)
 
 	if len(result.Trays) == 0 {
-    return result, errors.New("No record found")
-  }
+		return result, errors.New("No record found")
+	}
 
 	if err != nil {
 		return result, err
