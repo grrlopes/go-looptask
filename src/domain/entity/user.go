@@ -16,3 +16,7 @@ type Users struct {
 	UpdatedAt time.Time          `json:"updated_at" bson:"updated_at"`
 	jwt.StandardClaims
 }
+
+type UserId struct {
+	ID primitive.ObjectID `json:"id" validate:"omitempty,required" bson:"_id"`
+}

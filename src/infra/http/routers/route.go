@@ -20,6 +20,7 @@ func AuthCtrl(app gin.IRouter) {
 
 func UserCtrl(app gin.IRouter) {
 	app.POST("/createuser", controllers.CreateUser())
+	app.GET("/fetchoneuser", middleware.AuthUserToken(), controllers.FetchOneUser())
 }
 
 func LabelCtrl(app gin.IRouter) {

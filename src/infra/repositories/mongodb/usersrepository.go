@@ -102,5 +102,4 @@ func (db *users) FindUserById(user *entity.Users) (entity.Users, error) {
 	}
 
 	return result, nil
-
 }
