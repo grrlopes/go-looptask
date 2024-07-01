@@ -19,7 +19,7 @@ var (
 
 func FetchOneTray() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var payload entity.Tray
+		var payload entity.TrayId
 		err := c.ShouldBindJSON(&payload)
 
 		checked, validErr := validator.Validate(&payload)
@@ -32,7 +32,7 @@ func FetchOneTray() gin.HandlerFunc {
 		result, err := usecaseFetchOneTray.Execute(&payload)
 
 		if err != nil {
-			error := presenters.FetchOneLabelTrayError(payload, err)
+			error := presenters.FetchOneLabelTrayError(err)
 			c.JSON(http.StatusNotFound, error)
 			return
 		}

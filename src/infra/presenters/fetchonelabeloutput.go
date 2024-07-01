@@ -12,9 +12,9 @@ func FetchOneLabelTraySuccess(label entity.LabelAggSet) output {
 	}
 }
 
-func FetchOneLabelTrayError(label entity.Tray, err error) output {
+func FetchOneLabelTrayError(err error) output {
 	return output{
-		"error": err.Error(),
+		"error":   err.Error(),
 		"message": nil,
 		"success": false,
 	}

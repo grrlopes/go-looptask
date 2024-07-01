@@ -17,7 +17,7 @@ func NewFetchOneTray(repo repository.IMongoTrayRepo) InputBoundary {
 	}
 }
 
-func (e execute) Execute(data *entity.Tray) (entity.LabelAggSet, error) {
+func (e execute) Execute(data *entity.TrayId) (entity.LabelAggSet, error) {
 	var res entity.LabelAggSet
 	result, err := e.repository.Fetchtraybyid(data)
 
