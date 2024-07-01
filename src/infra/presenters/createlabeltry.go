@@ -4,7 +4,7 @@ import (
 	"github.com/grrlopes/go-looptask/src/domain/entity"
 )
 
-func CreateLabelTraySuccess(label entity.Labeled, id string) output {
+func CreateLabelTrayStackSuccess(label entity.Labeled, id string) output {
 	return output{
 		"error": nil,
 		"message": map[string]interface{}{
@@ -15,7 +15,7 @@ func CreateLabelTraySuccess(label entity.Labeled, id string) output {
 	}
 }
 
-func CreateLabelTrayError(label entity.Labeled) output {
+func CreateLabelTrayStackError(label entity.Labeled) output {
 	return output{
 		"error": nil,
 		"message": map[string]interface{}{

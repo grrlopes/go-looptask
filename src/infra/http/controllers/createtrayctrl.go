@@ -27,12 +27,12 @@ func CreateTrayStack() gin.HandlerFunc {
 		result, err := usecaseCreateLabelTray.Execute(&payload)
 
 		if err != nil {
-			error := presenters.CreateLabelTrayError(payload)
+			error := presenters.CreateLabelTrayStackError(payload)
 			c.JSON(http.StatusUnprocessableEntity, error)
 			return
 		}
 
-		data := presenters.CreateLabelTraySuccess(payload, result)
+		data := presenters.CreateLabelTrayStackSuccess(payload, result)
 
 		c.JSON(http.StatusOK, data)
 	}
