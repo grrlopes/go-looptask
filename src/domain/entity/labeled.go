@@ -28,10 +28,6 @@ type MongoResul struct {
 	Reason    string      `json:"reason"`
 }
 
-type rows struct {
-	ID string `json:"id"`
-}
-
 // LabelAggSet represents an aggregation result-set for
 // two collections - TrayAggSet, CreatorAggSet
 type LabelAggSet struct {

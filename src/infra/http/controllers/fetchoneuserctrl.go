@@ -18,7 +18,7 @@ var (
 
 func FetchOneUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
-    userInfo := helper.GetUserInfoJwt(helper.ExtractToken(c))
+		userInfo := helper.GetUserInfoJwt(helper.ExtractToken(c))
 
 		result, err := usecaseFetchOneUser.Execute(&userInfo)
 
