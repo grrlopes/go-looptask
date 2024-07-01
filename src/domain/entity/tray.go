@@ -11,7 +11,7 @@ type Tray struct {
 }
 
 type TrayId struct {
-	ID primitive.ObjectID `json:"id" validate:"required" bson:"_id"`
+	Id primitive.ObjectID `json:"id" validate:"required" bson:"_id"`
 }
 
 // TrayAggSet represents an aggregation result-set for one collection Creator

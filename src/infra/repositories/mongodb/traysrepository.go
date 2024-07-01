@@ -32,7 +32,7 @@ func (db *trays) Fetchtraybyid(data *entity.TrayId) ([]entity.LabelAggSet, error
 	var result []entity.LabelAggSet
 
 	pipeline := bson.A{
-		bson.D{{Key: "$match", Value: bson.D{{Key: "_id", Value: data.ID}}}},
+		bson.D{{Key: "$match", Value: bson.D{{Key: "_id", Value: data.Id}}}},
 		bson.D{
 			{Key: "$lookup",
 				Value: bson.D{
