@@ -2,7 +2,8 @@ package mongodb
 
 import (
 	"context"
-	"errors"
+	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/grrlopes/go-looptask/src/domain/entity"
@@ -30,21 +31,64 @@ func NewTrayRepository() repository.IMongoTrayRepo {
 }
 
 func (db *trays) Fetchtraybyid(data *entity.Tray) (entity.Labeled, error) {
-	var result entity.Labeled
-	err := db.con.FindOne(context.TODO(), bson.D{{
-		Key:   "_id",
-		Value: data.Id,
-	}}).Decode(&result)
+	var result []entity.LabelUser
 
-	if len(result.Trays) == 0 {
-		return result, errors.New("No record found")
+	pipeline := bson.A{
+		bson.D{{Key: "$match", Value: bson.D{{Key: "_id", Value: data.Id}}}},
+		bson.D{
+			{Key: "$lookup",
+				Value: bson.D{
+					{Key: "from", Value: "user"},
+					{Key: "localField", Value: "owner"},
+					{Key: "foreignField", Value: "_id"},
+					{Key: "as", Value: "owner"},
+				},
+			},
+		},
+		bson.D{
+			{Key: "$unwind",
+				Value: bson.D{
+					{Key: "path", Value: "$owner"},
+					{Key: "preserveNullAndEmptyArrays", Value: false},
+				},
+			},
+		},
+		// bson.D{
+		// 	{Key: "$lookup",
+		// 		Value: bson.D{
+		// 			{Key: "from", Value: "user"},
+		// 			{Key: "localField", Value: "trays.userid"},
+		// 			{Key: "foreignField", Value: "_id"},
+		// 			{Key: "as", Value: "trays"},
+		// 		},
+		// 	},
+		// },
+		// bson.D{
+		// 	{Key: "$unwind",
+		// 		Value: bson.D{
+		// 			{Key: "path", Value: "$trays"},
+		// 			{Key: "preserveNullAndEmptyArrays", Value: false},
+		// 		},
+		// 	},
+		// },
 	}
+
+	cursor, err := db.con.Aggregate(context.TODO(), pipeline)
+	if err = cursor.All(context.TODO(), &result); err != nil {
+		panic(err)
+	}
+	// fmt.Println(result, "+++++++++")
+	// for _, result := range result {
+	// 	fmt.Printf("Result: %+v\n", result)
+	// }
+  jk, _ := json.MarshalIndent(result, "", " ")
+  fmt.Println(string(jk))
 
 	if err != nil {
-		return result, err
+		return entity.Labeled{}, err
 	}
 
-	return result, nil
+	return entity.Labeled{}, nil
 }
 
 func (db *trays) ListAllTrays(data *entity.Labeled) (entity.MongoResul, error) {
