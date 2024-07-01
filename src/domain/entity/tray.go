@@ -9,3 +9,12 @@ type Tray struct {
 	UserId primitive.ObjectID `json:"userid" bson:"userid"`
 	Done   bool               `json:"done" bson:"done"`
 }
+
+// TrayAggSet represents an aggregation result-set for one collection Creator
+type TrayAggSet struct {
+	Id     primitive.ObjectID `json:"id" bson:"_id"`
+	TrayId string             `json:"trayid" bson:"trayid"`
+	Size   string             `json:"size" bson:"size"`
+	UserId CreatorAggSet          `json:"userid" bson:"userid"`
+	Done   bool               `json:"done" bson:"done"`
+}

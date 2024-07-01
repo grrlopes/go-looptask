@@ -4,7 +4,7 @@ import (
 	"github.com/grrlopes/go-looptask/src/domain/entity"
 )
 
-func FetchOneLabelTraySuccess(label entity.Labeled) output {
+func FetchOneLabelTraySuccess(label entity.LabelAggSet) output {
 	return output{
 		"error":   nil,
 		"message": label,

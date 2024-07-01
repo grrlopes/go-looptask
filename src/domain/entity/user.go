@@ -21,3 +21,11 @@ type Users struct {
 type UserId struct {
 	ID primitive.ObjectID `json:"id" validate:"omitempty,required" bson:"_id"`
 }
+
+// CreatorAggSet represents an aggregation result-set
+type CreatorAggSet struct {
+	ID      primitive.ObjectID `json:"id" bson:"_id"`
+	Name    string             `json:"name" bson:"name"`
+	Surname string             `json:"surname" bson:"surname"`
+	Email   string             `json:"email" bson:"email"`
+}

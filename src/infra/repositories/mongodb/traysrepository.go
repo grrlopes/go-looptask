@@ -2,8 +2,6 @@ package mongodb
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 	"time"
 
 	"github.com/grrlopes/go-looptask/src/domain/entity"
@@ -30,8 +28,8 @@ func NewTrayRepository() repository.IMongoTrayRepo {
 	}
 }
 
-func (db *trays) Fetchtraybyid(data *entity.Tray) (entity.Labeled, error) {
-	var result []entity.LabelUser
+func (db *trays) Fetchtraybyid(data *entity.Tray) ([]entity.LabelAggSet, error) {
+	var result []entity.LabelAggSet
 
 	pipeline := bson.A{
 		bson.D{{Key: "$match", Value: bson.D{{Key: "_id", Value: data.Id}}}},
@@ -53,42 +51,49 @@ func (db *trays) Fetchtraybyid(data *entity.Tray) (entity.Labeled, error) {
 				},
 			},
 		},
-		// bson.D{
-		// 	{Key: "$lookup",
-		// 		Value: bson.D{
-		// 			{Key: "from", Value: "user"},
-		// 			{Key: "localField", Value: "trays.userid"},
-		// 			{Key: "foreignField", Value: "_id"},
-		// 			{Key: "as", Value: "trays"},
-		// 		},
-		// 	},
-		// },
-		// bson.D{
-		// 	{Key: "$unwind",
-		// 		Value: bson.D{
-		// 			{Key: "path", Value: "$trays"},
-		// 			{Key: "preserveNullAndEmptyArrays", Value: false},
-		// 		},
-		// 	},
-		// },
+		bson.D{
+			{Key: "$lookup",
+				Value: bson.D{
+					{Key: "from", Value: "user"},
+					{Key: "localField", Value: "trays.userid"},
+					{Key: "foreignField", Value: "_id"},
+					{Key: "as", Value: "tray_user"},
+				},
+			},
+		},
+		bson.D{
+			{Key: "$unwind", Value: bson.D{
+				{Key: "path", Value: "$tray_user"},
+				{Key: "preserveNullAndEmptyArrays", Value: false},
+			}},
+		},
+		bson.D{
+			{Key: "$addFields", Value: bson.D{
+				{Key: "trays.userid", Value: "$tray_user"},
+			}}},
+		bson.D{
+			{Key: "$project", Value: bson.D{
+				{Key: "tray_user", Value: 0},
+				{Key: "trays.userid.password", Value: 0},
+				{Key: "owner.updated_at", Value: 0},
+				{Key: "owner.created_at", Value: 0},
+				{Key: "owner.password", Value: 0},
+				{Key: "trays.userid.updated_at", Value: 0},
+				{Key: "trays.userid.created_at", Value: 0},
+			}},
+		},
 	}
 
 	cursor, err := db.con.Aggregate(context.TODO(), pipeline)
 	if err = cursor.All(context.TODO(), &result); err != nil {
 		panic(err)
 	}
-	// fmt.Println(result, "+++++++++")
-	// for _, result := range result {
-	// 	fmt.Printf("Result: %+v\n", result)
-	// }
-  jk, _ := json.MarshalIndent(result, "", " ")
-  fmt.Println(string(jk))
 
 	if err != nil {
-		return entity.Labeled{}, err
+		return result, err
 	}
 
-	return entity.Labeled{}, nil
+	return result, nil
 }
 
 func (db *trays) ListAllTrays(data *entity.Labeled) (entity.MongoResul, error) {

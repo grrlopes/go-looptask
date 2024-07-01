@@ -1,6 +1,8 @@
 package fetchtraybyid
 
 import (
+	"errors"
+
 	"github.com/grrlopes/go-looptask/src/domain/entity"
 	"github.com/grrlopes/go-looptask/src/domain/repository"
 )
@@ -15,8 +17,17 @@ func NewFetchOneTray(repo repository.IMongoTrayRepo) InputBoundary {
 	}
 }
 
-func (e execute) Execute(data *entity.Tray) (entity.Labeled, error) {
+func (e execute) Execute(data *entity.Tray) (entity.LabelAggSet, error) {
+	var res entity.LabelAggSet
 	result, err := e.repository.Fetchtraybyid(data)
 
-	return result, err
+	if err != nil {
+		return res, errors.New("Not found record!")
+	}
+
+	for _, v := range result {
+		res = v
+	}
+
+	return res, err
 }

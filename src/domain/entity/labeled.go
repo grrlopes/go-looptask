@@ -32,11 +32,12 @@ type rows struct {
 	ID string `json:"id"`
 }
 
-// LabelUser represents an aggregation result-set for two collections
-type LabelUser struct {
+// LabelAggSet represents an aggregation result-set for
+// two collections - TrayAggSet, CreatorAggSet
+type LabelAggSet struct {
 	ID        primitive.ObjectID `json:"id" bson:"_id,omitempty"`
-	Trays     []Tray             `json:"trays" bson:"trays"`
-	Owner     Users              `json:"owner" bson:"owner"`
+	Trays     []TrayAggSet       `json:"trays" bson:"trays"`
+	Owner     CreatorAggSet      `json:"owner" bson:"owner"`
 	CreatedAt time.Time          `json:"created_at" bson:"created_at"`
 	UpdatedAt time.Time          `json:"updated_at" bson:"updated_at"`
 }

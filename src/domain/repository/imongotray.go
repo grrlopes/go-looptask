@@ -7,5 +7,5 @@ import (
 type IMongoTrayRepo interface {
 	CreateLabelTray(data *entity.Labeled) (string, error)
 	ListAllTrays(data *entity.Labeled) (entity.MongoResul, error)
-	Fetchtraybyid(data *entity.Tray) (entity.Labeled, error)
+	Fetchtraybyid(data *entity.Tray) ([]entity.LabelAggSet, error)
 }
