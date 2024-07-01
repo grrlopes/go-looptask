@@ -85,10 +85,11 @@ func (db *trays) Fetchtraybyid(data *entity.Tray) ([]entity.LabelAggSet, error) 
 	}
 
 	cursor, err := db.con.Aggregate(context.TODO(), pipeline)
-	if err = cursor.All(context.TODO(), &result); err != nil {
-		panic(err)
+	if err != nil {
+		return result, err
 	}
 
+	err = cursor.All(context.TODO(), &result)
 	if err != nil {
 		return result, err
 	}

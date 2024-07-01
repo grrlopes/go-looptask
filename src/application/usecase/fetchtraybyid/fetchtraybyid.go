@@ -21,8 +21,12 @@ func (e execute) Execute(data *entity.Tray) (entity.LabelAggSet, error) {
 	var res entity.LabelAggSet
 	result, err := e.repository.Fetchtraybyid(data)
 
+	if len(result) <= 0 {
+		return entity.LabelAggSet{}, errors.New("Not found record!")
+	}
+
 	if err != nil {
-		return res, errors.New("Not found record!")
+		return res, errors.New("Something went wrong!")
 	}
 
 	for _, v := range result {
