@@ -37,3 +37,11 @@ type LabelAggSet struct {
 	CreatedAt time.Time          `json:"created_at" bson:"created_at"`
 	UpdatedAt time.Time          `json:"updated_at" bson:"updated_at"`
 }
+
+// LabelStack represents an struct without Trays slice element
+type LabelStack struct {
+	ID        primitive.ObjectID `json:"id" bson:"_id"`
+	Owner     primitive.ObjectID `json:"owner" bson:"owner"`
+	CreatedAt time.Time          `json:"created_at" bson:"created_at"`
+	UpdatedAt time.Time          `json:"updated_at" bson:"updated_at"`
+}

@@ -2,6 +2,7 @@ package mongodb
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/grrlopes/go-looptask/src/domain/entity"
@@ -89,6 +90,8 @@ func (db *trays) Fetchtraybyid(data *entity.TrayId) ([]entity.LabelAggSet, error
 		return result, err
 	}
 
+	defer cursor.Close(context.TODO())
+
 	err = cursor.All(context.TODO(), &result)
 	if err != nil {
 		return result, err
@@ -132,4 +135,22 @@ func (db *trays) CreateLabelTray(data *entity.Labeled) (string, error) {
 	}
 
 	return res.InsertedID.(primitive.ObjectID).Hex(), err
+}
+
+func (db *trays) ListAllTrayStack() ([]entity.LabelStack, error) {
+	var result []entity.LabelStack
+
+	res, err := db.con.Find(context.TODO(), bson.D{})
+	if err != nil {
+		return result, errors.New(err.Error())
+	}
+
+	defer res.Close(context.TODO())
+
+	err = res.All(context.TODO(), &result)
+	if err != nil {
+		return result, errors.New(err.Error())
+	}
+
+	return result, nil
 }

@@ -8,4 +8,5 @@ type IMongoTrayRepo interface {
 	CreateLabelTray(data *entity.Labeled) (string, error)
 	ListAllTrays(data *entity.Labeled) (entity.MongoResul, error)
 	Fetchtraybyid(data *entity.TrayId) ([]entity.LabelAggSet, error)
+	ListAllTrayStack() ([]entity.LabelStack, error)
 }
