@@ -10,6 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type trays struct {
@@ -72,6 +73,13 @@ func (db *trays) Fetchtraybyid(data *entity.TrayId) ([]entity.LabelAggSet, error
 			{Key: "$addFields", Value: bson.D{
 				{Key: "trays.userid", Value: "$tray_user"},
 			}}},
+		bson.D{
+			{Key: "$addFields", Value: bson.D{
+				{Key: "tray_count", Value: bson.D{
+					{Key: "$size", Value: "$trays"},
+				}},
+			}},
+		},
 		bson.D{
 			{Key: "$project", Value: bson.D{
 				{Key: "tray_user", Value: 0},
@@ -138,16 +146,33 @@ func (db *trays) CreateLabelTray(data *entity.Labeled) (string, error) {
 }
 
 func (db *trays) ListAllTrayStack() ([]entity.LabelStack, error) {
-	var result []entity.LabelStack
+	var (
+		result       []entity.LabelStack
+		opts         = options.Find()
+		addTrayCount []entity.Labeled
+	)
+	opts.SetSkip(int64(0))
+	opts.SetLimit(int64(4))
 
-	res, err := db.con.Find(context.TODO(), bson.D{})
+	res, err := db.con.Find(context.TODO(), bson.D{}, opts)
 	if err != nil {
 		return result, errors.New(err.Error())
 	}
 
 	defer res.Close(context.TODO())
 
-	err = res.All(context.TODO(), &result)
+	err = res.All(context.TODO(), &addTrayCount)
+
+	for _, v := range addTrayCount {
+		result = append(result, entity.LabelStack{
+			ID:        v.ID,
+			Owner:     v.Owner,
+			TrayCount: int64(len(v.Trays)),
+			CreatedAt: v.CreatedAt,
+			UpdatedAt: v.UpdatedAt,
+		})
+	}
+
 	if err != nil {
 		return result, errors.New(err.Error())
 	}
