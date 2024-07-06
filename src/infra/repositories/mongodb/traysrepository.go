@@ -179,3 +179,27 @@ func (db *trays) ListAllTrayStack() ([]entity.LabelStack, error) {
 
 	return result, nil
 }
+
+func (db *trays) CreateLabel(data *entity.Tray) (int64, error) {
+	labeled := entity.Tray{
+		Id:        data.Id,
+		TrayId:    data.TrayId,
+		Size:      data.Size,
+		UserId:    data.UserId,
+		Done:      data.Done,
+		CreatedAt: time.Now(),
+	}
+
+	pipeline := bson.M{
+		"$push": bson.M{
+			"trays": labeled,
+		},
+	}
+
+	result, err := db.con.UpdateOne(context.TODO(), bson.M{"_id": data.Id}, pipeline)
+	if err != nil {
+		return 0, errors.New(err.Error())
+	}
+
+	return result.MatchedCount, nil
+}

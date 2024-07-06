@@ -7,11 +7,12 @@ import (
 )
 
 type Tray struct {
-	Id     primitive.ObjectID `json:"id" bson:"_id"`
-	TrayId string             `json:"trayid" bson:"trayid"`
-	Size   string             `json:"size" bson:"size"`
-	UserId primitive.ObjectID `json:"userid" bson:"userid"`
-	Done   bool               `json:"done" bson:"done"`
+	Id        primitive.ObjectID `json:"id" bson:"_id"`
+	TrayId    string             `json:"trayid" bson:"trayid"`
+	Size      string             `json:"size" bson:"size"`
+	UserId    primitive.ObjectID `json:"userid" bson:"userid"`
+	Done      bool               `json:"done" bson:"done"`
+	CreatedAt time.Time          `json:"created_at" bson:"created_at"`
 }
 
 type TrayId struct {
