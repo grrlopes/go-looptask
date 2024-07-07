@@ -182,7 +182,7 @@ func (db *trays) ListAllTrayStack() ([]entity.LabelStack, error) {
 
 func (db *trays) CreateLabel(data *entity.Tray) (int64, error) {
 	labeled := entity.Tray{
-		Id:        data.Id,
+		Id:        primitive.NewObjectID(),
 		TrayId:    data.TrayId,
 		Size:      data.Size,
 		UserId:    data.UserId,
