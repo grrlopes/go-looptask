@@ -15,6 +15,10 @@ type Tray struct {
 	CreatedAt time.Time          `json:"created_at" bson:"created_at"`
 }
 
+type LabelId struct {
+	Id string `form:"id"`
+}
+
 type TrayId struct {
 	Id primitive.ObjectID `json:"id" validate:"required" bson:"_id"`
 }

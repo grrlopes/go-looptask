@@ -10,6 +10,7 @@ import (
 	"github.com/grrlopes/go-looptask/src/domain/validator"
 	"github.com/grrlopes/go-looptask/src/infra/presenters"
 	"github.com/grrlopes/go-looptask/src/infra/repositories/mongodb"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 var (
@@ -20,7 +21,10 @@ var (
 func FetchOneTray() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var payload entity.TrayId
-		err := c.ShouldBindJSON(&payload)
+    var param entity.LabelId
+		err := c.ShouldBind(&param)
+
+    payload.Id, _ = primitive.ObjectIDFromHex(param.Id)
 
 		checked, validErr := validator.Validate(&payload)
 		if checked {
