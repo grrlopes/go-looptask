@@ -39,10 +39,11 @@ type LabelAggSet struct {
 	UpdatedAt time.Time          `json:"updated_at" bson:"updated_at"`
 }
 
-// LabelStack represents an struct without Trays slice element
-type LabelStack struct {
+// LabelStackAggSet represents an aggregation result-set for
+// one collection - CreatorAggSet
+type LabelStackAggSet struct {
 	ID        primitive.ObjectID `json:"id" bson:"_id"`
-	Owner     primitive.ObjectID `json:"owner" bson:"owner"`
+	Owner     CreatorAggSet      `json:"owner" bson:"owner"`
 	TrayCount int64              `json:"tray_count" bson:"tray_count"`
 	CreatedAt time.Time          `json:"created_at" bson:"created_at"`
 	UpdatedAt time.Time          `json:"updated_at" bson:"updated_at"`

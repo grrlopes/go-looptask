@@ -4,7 +4,7 @@ import (
 	"github.com/grrlopes/go-looptask/src/domain/entity"
 )
 
-func ListAllLabelTrayStackSuccess(label []entity.LabelStack) output {
+func ListAllLabelTrayStackSuccess(label []entity.LabelStackAggSet) output {
 	return output{
 		"error":   nil,
 		"message": label,

@@ -10,7 +10,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type trays struct {
@@ -145,36 +144,57 @@ func (db *trays) CreateLabelTray(data *entity.Labeled) (string, error) {
 	return res.InsertedID.(primitive.ObjectID).Hex(), err
 }
 
-func (db *trays) ListAllTrayStack() ([]entity.LabelStack, error) {
-	var (
-		result       []entity.LabelStack
-		opts         = options.Find()
-		addTrayCount []entity.Labeled
-	)
-	opts.SetSkip(int64(0))
-	opts.SetLimit(int64(4))
+func (db *trays) ListAllTrayStack() ([]entity.LabelStackAggSet, error) {
+	var result []entity.LabelStackAggSet
 
-	res, err := db.con.Find(context.TODO(), bson.D{}, opts)
-	if err != nil {
-		return result, errors.New(err.Error())
+	pipeline := bson.A{
+		bson.D{
+			{Key: "$lookup",
+				Value: bson.D{
+					{Key: "from", Value: "user"},
+					{Key: "localField", Value: "owner"},
+					{Key: "foreignField", Value: "_id"},
+					{Key: "as", Value: "owner"},
+				},
+			},
+		},
+		bson.D{
+			{Key: "$unwind",
+				Value: bson.D{
+					{Key: "path", Value: "$owner"},
+					{Key: "preserveNullAndEmptyArrays", Value: false},
+				},
+			},
+		},
+		bson.D{
+			{Key: "$addFields", Value: bson.D{
+				{Key: "tray_count", Value: bson.D{
+					{Key: "$size", Value: "$trays"},
+				}},
+			}},
+		},
+		bson.D{
+			{Key: "$project", Value: bson.D{
+				{Key: "trays", Value: 0},
+				{Key: "owner.updated_at", Value: 0},
+				{Key: "owner.created_at", Value: 0},
+				{Key: "owner.password", Value: 0},
+			}},
+		},
+		bson.D{{Key: "$skip", Value: 0}},
+		bson.D{{Key: "$limit", Value: 7}},
 	}
 
-	defer res.Close(context.TODO())
-
-	err = res.All(context.TODO(), &addTrayCount)
-
-	for _, v := range addTrayCount {
-		result = append(result, entity.LabelStack{
-			ID:        v.ID,
-			Owner:     v.Owner,
-			TrayCount: int64(len(v.Trays)),
-			CreatedAt: v.CreatedAt,
-			UpdatedAt: v.UpdatedAt,
-		})
+	cursor, err := db.con.Aggregate(context.TODO(), pipeline)
+	if err != nil {
+		return result, err
 	}
 
+	defer cursor.Close(context.TODO())
+
+	err = cursor.All(context.TODO(), &result)
 	if err != nil {
-		return result, errors.New(err.Error())
+		return result, err
 	}
 
 	return result, nil

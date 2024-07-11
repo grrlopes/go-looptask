@@ -15,10 +15,10 @@ func NewListAllTrayStack(repo repository.IMongoTrayRepo) InputBoundary {
 	}
 }
 
-func (e execute) Execute() ([]entity.LabelStack, error) {
+func (e execute) Execute() ([]entity.LabelStackAggSet, error) {
 	result, err := e.repository.ListAllTrayStack()
 	if err != nil {
-		return []entity.LabelStack{}, err
+		return []entity.LabelStackAggSet{}, err
 	}
 
 	return result, nil
