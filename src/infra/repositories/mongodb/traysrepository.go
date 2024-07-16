@@ -148,6 +148,7 @@ func (db *trays) ListAllTrayStack() ([]entity.LabelStackAggSet, error) {
 	var result []entity.LabelStackAggSet
 
 	pipeline := bson.A{
+		// Lookup the 'owner' details from the 'user' collection
 		bson.D{
 			{Key: "$lookup",
 				Value: bson.D{
@@ -158,6 +159,7 @@ func (db *trays) ListAllTrayStack() ([]entity.LabelStackAggSet, error) {
 				},
 			},
 		},
+		// Unwind the 'owner' array (in case it's an array) and preserve non-null results only
 		bson.D{
 			{Key: "$unwind",
 				Value: bson.D{
@@ -166,6 +168,7 @@ func (db *trays) ListAllTrayStack() ([]entity.LabelStackAggSet, error) {
 				},
 			},
 		},
+		// Add a new field 'tray_count' to count the number of elements in the 'trays' array
 		bson.D{
 			{Key: "$addFields", Value: bson.D{
 				{Key: "tray_count", Value: bson.D{
@@ -173,6 +176,44 @@ func (db *trays) ListAllTrayStack() ([]entity.LabelStackAggSet, error) {
 				}},
 			}},
 		},
+		// Facet the pipeline into two paths: one for documents with trays and one for those without
+		bson.D{{Key: "$facet", Value: bson.D{
+			// Pipeline for documents with non-empty trays
+			{Key: "with_trays", Value: bson.A{
+				// Unwind the 'trays' array to process each tray individually
+				bson.D{{Key: "$unwind", Value: bson.D{{Key: "path", Value: "$trays"}}}},
+				// Group by document _id to keep original structure and count tray sizes
+				bson.D{{Key: "$group", Value: bson.D{
+					{Key: "_id", Value: "$_id"},
+					{Key: "small_count", Value: bson.D{{Key: "$sum", Value: bson.D{
+						{Key: "$cond", Value: bson.A{bson.D{{Key: "$eq", Value: bson.A{"$trays.size", "small"}}}, 1, 0}}}}}},
+					{Key: "large_count", Value: bson.D{{Key: "$sum", Value: bson.D{
+						{Key: "$cond", Value: bson.A{bson.D{{Key: "$eq", Value: bson.A{"$trays.size", "large"}}}, 1, 0}}}}}},
+					{Key: "document", Value: bson.D{{Key: "$first", Value: "$$ROOT"}}},
+				}}},
+				// Add the counts to the original document structure
+				bson.D{{Key: "$addFields", Value: bson.D{
+					{Key: "document.small_count", Value: "$small_count"},
+					{Key: "document.large_count", Value: "$large_count"},
+				}}},
+				// Replace the root with the modified document
+				bson.D{{Key: "$replaceRoot", Value: bson.D{{Key: "newRoot", Value: "$document"}}}},
+			}},
+			// Pipeline for documents without trays
+			{Key: "without_trays", Value: bson.A{
+				// Match documents where the trays array is empty
+				bson.D{{Key: "$match", Value: bson.D{{Key: "tray_count", Value: 0}}}},
+			}},
+		}}},
+		// Merge the results from both facets
+		bson.D{{Key: "$project", Value: bson.D{
+			{Key: "result", Value: bson.D{{Key: "$concatArrays", Value: bson.A{"$with_trays", "$without_trays"}}}},
+		}}},
+		bson.D{{Key: "$unwind", Value: "$result"}},
+		bson.D{{Key: "$replaceRoot", Value: bson.D{{Key: "newRoot", Value: "$result"}}}},
+		// Sort the documents by the 'created_at' field
+		bson.D{{Key: "$sort", Value: bson.D{{Key: "created_at", Value: -1}}}}, // 1 for ascending order, -1 for descending order
+		// Project the desired fields to include in the final result
 		bson.D{
 			{Key: "$project", Value: bson.D{
 				{Key: "trays", Value: 0},
@@ -182,7 +223,7 @@ func (db *trays) ListAllTrayStack() ([]entity.LabelStackAggSet, error) {
 			}},
 		},
 		bson.D{{Key: "$skip", Value: 0}},
-		bson.D{{Key: "$limit", Value: 7}},
+		bson.D{{Key: "$limit", Value: 14}},
 	}
 
 	cursor, err := db.con.Aggregate(context.TODO(), pipeline)

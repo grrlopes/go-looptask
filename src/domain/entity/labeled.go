@@ -42,9 +42,15 @@ type LabelAggSet struct {
 // LabelStackAggSet represents an aggregation result-set for
 // one collection - CreatorAggSet
 type LabelStackAggSet struct {
-	ID        primitive.ObjectID `json:"id" bson:"_id"`
-	Owner     CreatorAggSet      `json:"owner" bson:"owner"`
-	TrayCount int64              `json:"tray_count" bson:"tray_count"`
-	CreatedAt time.Time          `json:"created_at" bson:"created_at"`
-	UpdatedAt time.Time          `json:"updated_at" bson:"updated_at"`
+	ID       primitive.ObjectID `json:"id" bson:"_id"`
+	Owner    CreatorAggSet      `json:"owner" bson:"owner"`
+	Estimate struct {
+		Small int32 `json:"small" bson:"small"`
+		Large int32 `json:"large" bson:"large"`
+	} `json:"estimate"`
+	TrayCount  int64     `json:"tray_count" bson:"tray_count"`
+	SmallCount int32     `json:"small_count" bson:"small_count"`
+	LargeCount int32     `json:"large_count" bson:"large_count"`
+	CreatedAt  time.Time `json:"created_at" bson:"created_at"`
+	UpdatedAt  time.Time `json:"updated_at" bson:"updated_at"`
 }
