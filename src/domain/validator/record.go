@@ -26,7 +26,8 @@ type _validate interface {
 		entity.Users |
 		entity.Tray |
 		entity.UserId |
-		entity.TrayId
+		entity.TrayId |
+		entity.LabelTrayStack
 }
 
 func Validate[T _validate](entity *T) (error bool, field FieldValidation) {

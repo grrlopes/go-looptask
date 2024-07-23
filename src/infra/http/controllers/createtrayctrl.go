@@ -7,6 +7,7 @@ import (
 	"github.com/grrlopes/go-looptask/src/application/usecase/createlabeltray"
 	"github.com/grrlopes/go-looptask/src/domain/entity"
 	"github.com/grrlopes/go-looptask/src/domain/repository"
+	"github.com/grrlopes/go-looptask/src/domain/validator"
 	"github.com/grrlopes/go-looptask/src/helper"
 	"github.com/grrlopes/go-looptask/src/infra/presenters"
 	"github.com/grrlopes/go-looptask/src/infra/repositories/mongodb"
@@ -19,7 +20,16 @@ var (
 
 func CreateTrayStack() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var payload entity.Labeled
+		var payload entity.LabelTrayStack
+		c.ShouldBindJSON(&payload)
+
+		checked, validErr := validator.Validate(&payload)
+		if checked {
+			fieldErr := presenters.ValidFieldResponse(validErr)
+			c.JSON(http.StatusBadRequest, fieldErr)
+			return
+		}
+
 
 		userInfo := helper.GetUserInfoJwt(helper.ExtractToken(c))
 		payload.Owner = userInfo.ID

@@ -3,6 +3,7 @@ package mongodb
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/grrlopes/go-looptask/src/domain/entity"
@@ -110,7 +111,8 @@ func (db *trays) Fetchtraybyid(data *entity.TrayId) ([]entity.LabelAggSet, error
 func (db *trays) ListAllTrays(data *entity.Labeled) (entity.MongoResul, error) {
 	panic("unimplemented")
 }
-func (db *trays) CreateLabelTray(data *entity.Labeled) (string, error) {
+func (db *trays) CreateLabelTray(data *entity.LabelTrayStack) (string, error) {
+  fmt.Println(data.Large, data.Small)
 	trays := bson.A{}
 	for _, tray := range data.Trays {
 		trays = append(trays, bson.D{
@@ -127,6 +129,12 @@ func (db *trays) CreateLabelTray(data *entity.Labeled) (string, error) {
 		},
 		{
 			Key: "owner", Value: data.Owner,
+		},
+		{
+			Key: "estimate", Value: bson.D{
+				{Key: "small", Value: data.Small},
+				{Key: "large", Value: data.Large},
+			},
 		},
 		{
 			Key: "created_at", Value: time.Now(),

@@ -5,7 +5,7 @@ import (
 )
 
 type IMongoTrayRepo interface {
-	CreateLabelTray(data *entity.Labeled) (string, error)
+	CreateLabelTray(data *entity.LabelTrayStack) (string, error)
 	CreateLabel(data *entity.Tray) (int64, error)
 	ListAllTrays(data *entity.Labeled) (entity.MongoResul, error)
 	Fetchtraybyid(data *entity.TrayId) ([]entity.LabelAggSet, error)

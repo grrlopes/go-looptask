@@ -15,7 +15,7 @@ func NewListAllTrays(repo repository.IMongoTrayRepo) InputBoundary {
 	}
 }
 
-func (e execute) Execute(data *entity.Labeled) (string, error) {
+func (e execute) Execute(data *entity.LabelTrayStack) (string, error) {
 	result, err := e.repository.CreateLabelTray(data)
 
 	if err != nil {
