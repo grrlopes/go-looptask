@@ -15,9 +15,9 @@ func CreateLabelTrayStackSuccess(label entity.LabelTrayStack, id string) output 
 	}
 }
 
-func CreateLabelTrayStackError(label entity.LabelTrayStack) output {
+func CreateLabelTrayStackError(label entity.LabelTrayStack, err error) output {
 	return output{
-		"error": nil,
+		"error": err.Error(),
 		"message": map[string]interface{}{
 			"trays": label.Trays,
 		},

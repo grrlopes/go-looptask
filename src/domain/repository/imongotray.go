@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"time"
+
 	"github.com/grrlopes/go-looptask/src/domain/entity"
 )
 
@@ -10,4 +12,5 @@ type IMongoTrayRepo interface {
 	ListAllTrays(data *entity.Labeled) (entity.MongoResul, error)
 	Fetchtraybyid(data *entity.TrayId) ([]entity.LabelAggSet, error)
 	ListAllTrayStack() ([]entity.LabelStackAggSet, error)
+	FetchTrayStackByDate(start time.Time, end time.Time) ([]entity.LabelStackAggSet, error)
 }

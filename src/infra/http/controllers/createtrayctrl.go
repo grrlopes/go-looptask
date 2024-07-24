@@ -30,14 +30,13 @@ func CreateTrayStack() gin.HandlerFunc {
 			return
 		}
 
-
 		userInfo := helper.GetUserInfoJwt(helper.ExtractToken(c))
 		payload.Owner = userInfo.ID
 
 		result, err := usecaseCreateLabelTray.Execute(&payload)
 
 		if err != nil {
-			error := presenters.CreateLabelTrayStackError(payload)
+			error := presenters.CreateLabelTrayStackError(payload, err)
 			c.JSON(http.StatusUnprocessableEntity, error)
 			return
 		}
