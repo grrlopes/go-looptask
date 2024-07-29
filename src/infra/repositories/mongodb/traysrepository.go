@@ -2,7 +2,9 @@ package mongodb
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/grrlopes/go-looptask/src/domain/entity"
@@ -30,7 +32,9 @@ func NewTrayRepository() repository.IMongoTrayRepo {
 }
 
 func (db *trays) Fetchtraybyid(data *entity.TrayId) ([]entity.LabelAggSet, error) {
-	var result []entity.LabelAggSet
+	var (
+		result []entity.LabelAggSet
+	)
 
 	pipeline := bson.A{
 		bson.D{{Key: "$match", Value: bson.D{{Key: "_id", Value: data.Id}}}},
@@ -71,23 +75,48 @@ func (db *trays) Fetchtraybyid(data *entity.TrayId) ([]entity.LabelAggSet, error
 		bson.D{
 			{Key: "$addFields", Value: bson.D{
 				{Key: "trays.userid", Value: "$tray_user"},
-			}}},
-		bson.D{
-			{Key: "$addFields", Value: bson.D{
 				{Key: "tray_count", Value: bson.D{
 					{Key: "$size", Value: "$trays"},
 				}},
 			}},
 		},
+		bson.D{{Key: "$facet", Value: bson.D{
+			{Key: "with_trays", Value: bson.A{
+				bson.D{{Key: "$unwind", Value: bson.D{{Key: "path", Value: "$trays"}}}},
+				bson.D{{Key: "$group", Value: bson.D{
+					{Key: "_id", Value: "$_id"},
+					{Key: "trays", Value: bson.D{{Key: "$push", Value: "$trays"}}},
+					{Key: "small_count", Value: bson.D{{Key: "$sum", Value: bson.D{
+						{Key: "$cond", Value: bson.A{bson.D{{Key: "$eq", Value: bson.A{"$trays.size", "small"}}}, 1, 0}}}}}},
+					{Key: "large_count", Value: bson.D{{Key: "$sum", Value: bson.D{
+						{Key: "$cond", Value: bson.A{bson.D{{Key: "$eq", Value: bson.A{"$trays.size", "large"}}}, 1, 0}}}}}},
+					{Key: "document", Value: bson.D{{Key: "$first", Value: "$$ROOT"}}},
+				}}},
+				bson.D{{Key: "$addFields", Value: bson.D{
+					{Key: "document.trays", Value: "$trays"},
+					{Key: "document.small_count", Value: "$small_count"},
+					{Key: "document.large_count", Value: "$large_count"},
+				}}},
+				bson.D{{Key: "$replaceRoot", Value: bson.D{{Key: "newRoot", Value: "$document"}}}},
+			}},
+			{Key: "without_trays", Value: bson.A{
+				bson.D{{Key: "$match", Value: bson.D{{Key: "tray_count", Value: 0}}}},
+			}},
+		}}},
+		bson.D{{Key: "$project", Value: bson.D{
+			{Key: "result", Value: bson.D{{Key: "$concatArrays", Value: bson.A{"$with_trays", "$without_trays"}}}},
+		}}},
+		bson.D{{Key: "$unwind", Value: "$result"}},
+		bson.D{{Key: "$replaceRoot", Value: bson.D{{Key: "newRoot", Value: "$result"}}}},
+		bson.D{{Key: "$sort", Value: bson.D{{Key: "created_at", Value: -1}}}},
 		bson.D{
 			{Key: "$project", Value: bson.D{
+				{Key: "estimate", Value: 0},
 				{Key: "tray_user", Value: 0},
+				{Key: "owner", Value: 0},
 				{Key: "trays.userid.password", Value: 0},
-				{Key: "owner.updated_at", Value: 0},
-				{Key: "owner.created_at", Value: 0},
-				{Key: "owner.password", Value: 0},
-				{Key: "trays.userid.updated_at", Value: 0},
 				{Key: "trays.userid.created_at", Value: 0},
+				{Key: "trays.userid.updated_at", Value: 0},
 			}},
 		},
 	}
@@ -103,6 +132,9 @@ func (db *trays) Fetchtraybyid(data *entity.TrayId) ([]entity.LabelAggSet, error
 	if err != nil {
 		return result, err
 	}
+
+	j, _ := json.MarshalIndent(result, "", " ")
+	fmt.Println(string(j))
 
 	return result, nil
 }

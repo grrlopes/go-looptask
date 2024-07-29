@@ -29,14 +29,15 @@ type MongoResul struct {
 }
 
 // LabelAggSet represents an aggregation result-set for
-// two collections - TrayAggSet, CreatorAggSet
+// one collections - TrayAggSet
 type LabelAggSet struct {
-	ID        primitive.ObjectID `json:"id" bson:"_id,omitempty"`
-	Trays     []TrayAggSet       `json:"trays" bson:"trays"`
-	Owner     CreatorAggSet      `json:"owner" bson:"owner"`
-	TrayCount int64              `json:"tray_count" bson:"tray_count"`
-	CreatedAt time.Time          `json:"created_at" bson:"created_at"`
-	UpdatedAt time.Time          `json:"updated_at" bson:"updated_at"`
+	ID         primitive.ObjectID `json:"id" bson:"_id,omitempty"`
+	Trays      []TrayAggSet       `json:"trays" bson:"trays"`
+	TrayCount  int64              `json:"tray_count" bson:"tray_count"`
+	SmallCount int32              `json:"small_count" bson:"small_count"`
+	LargeCount int32              `json:"large_count" bson:"large_count"`
+	CreatedAt  time.Time          `json:"created_at" bson:"created_at"`
+	UpdatedAt  time.Time          `json:"updated_at" bson:"updated_at"`
 }
 
 // LabelStackAggSet represents an aggregation result-set for
