@@ -6,7 +6,11 @@ import (
 )
 
 func LoginSuccess(data map[string]interface{}) map[string]interface{} {
-	return data
+	return output{
+		"error":   nil,
+		"message": data,
+		"success": true,
+	}
 }
 
 func LoginError(data entity.Users) errorOuput {
