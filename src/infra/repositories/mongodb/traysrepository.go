@@ -2,9 +2,7 @@ package mongodb
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/grrlopes/go-looptask/src/domain/entity"
@@ -132,9 +130,6 @@ func (db *trays) Fetchtraybyid(data *entity.TrayId) ([]entity.LabelAggSet, error
 	if err != nil {
 		return result, err
 	}
-
-	j, _ := json.MarshalIndent(result, "", " ")
-	fmt.Println(string(j))
 
 	return result, nil
 }
