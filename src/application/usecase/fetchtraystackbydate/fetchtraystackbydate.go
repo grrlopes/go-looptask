@@ -1,6 +1,7 @@
 package fetchtraystackbydate
 
 import (
+	"errors"
 	"time"
 
 	"github.com/grrlopes/go-looptask/src/domain/entity"
@@ -17,13 +18,13 @@ func NewFetchtrayStackByDate(repo repository.IMongoTrayRepo) InputBoundary {
 	}
 }
 
-func (e execute) Execute() ([]entity.LabelStackAggSet, error) {
+func (e execute) Execute(dateStart *entity.TrayStacked) ([]entity.LabelStackAggSet, error) {
 	var (
-		now       = time.Now()
+		now       = dateStart.CreatedAt
 		startDate = time.Date(
 			now.Year(),
 			now.Month(),
-			10,
+			now.Day(),
 			0, 0, 0, 0,
 			time.UTC,
 		)
@@ -31,6 +32,9 @@ func (e execute) Execute() ([]entity.LabelStackAggSet, error) {
 	)
 
 	result, err := e.repository.FetchTrayStackByDate(startDate, endDate)
+  if len(result) == 0 {
+		return []entity.LabelStackAggSet{}, errors.New("There is no record on this date")
+  }
 	if err != nil {
 		return []entity.LabelStackAggSet{}, err
 	}

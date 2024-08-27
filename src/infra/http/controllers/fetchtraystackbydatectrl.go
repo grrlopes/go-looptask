@@ -5,7 +5,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/grrlopes/go-looptask/src/application/usecase/fetchtraystackbydate"
+	"github.com/grrlopes/go-looptask/src/domain/entity"
 	"github.com/grrlopes/go-looptask/src/domain/repository"
+	"github.com/grrlopes/go-looptask/src/domain/validator"
 	"github.com/grrlopes/go-looptask/src/infra/presenters"
 	"github.com/grrlopes/go-looptask/src/infra/repositories/mongodb"
 )
@@ -17,8 +19,17 @@ var (
 
 func FetchTrayStackByDate() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		var payload entity.TrayStacked
+		c.ShouldBindJSON(&payload)
 
-		result, err := usecaseFetchTrayStack.Execute()
+		checked, validErr := validator.Validate(&payload)
+		if checked {
+			fieldErr := presenters.ValidFieldResponse(validErr)
+			c.JSON(http.StatusBadRequest, fieldErr)
+			return
+		}
+
+		result, err := usecaseFetchTrayStack.Execute(&payload)
 
 		if err != nil {
 			error := presenters.FetchTrayStackByDateError(err)

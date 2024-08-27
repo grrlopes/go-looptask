@@ -1,7 +1,9 @@
 package validator
 
 import (
+	"errors"
 	"fmt"
+	"time"
 
 	"github.com/go-playground/locales/en"
 	ut "github.com/go-playground/universal-translator"
@@ -27,7 +29,8 @@ type _validate interface {
 		entity.Tray |
 		entity.UserId |
 		entity.TrayId |
-		entity.LabelTrayStack
+		entity.LabelTrayStack |
+		entity.TrayStacked
 }
 
 func Validate[T _validate](entity *T) (error bool, field FieldValidation) {
@@ -37,6 +40,7 @@ func Validate[T _validate](entity *T) (error bool, field FieldValidation) {
 	uni := ut.New(eng, eng)
 	trans, _ := uni.GetTranslator("en")
 	_ = en_translations.RegisterDefaultTranslations(validate, trans)
+	validate.RegisterValidation("notZeroTime", notZeroTime)
 
 	err := validate.Struct(entity)
 	checked, errs := handleError(err, trans)
@@ -55,9 +59,23 @@ func handleError(err error, trans ut.Translator) (checked bool, fieldErr []error
 	}
 
 	validatorErrs := err.(validator.ValidationErrors)
-	for _, e := range validatorErrs {
-		translatedErr := fmt.Errorf(e.Translate(trans))
+	for _, err := range validatorErrs {
+		translatedErr := fmt.Errorf(err.Translate(trans))
+		if err.Field() == "CreatedAt" {
+			if err.Tag() == "required" || err.Tag() == "notZeroTime" {
+				fieldErr = append(fieldErr, errors.New("created_at is a required field and must not be empty."))
+				return true, fieldErr
+			} else {
+				fmt.Printf("Validation error on field '%s': %s\n", err.Field(), err.Error())
+			}
+		}
 		fieldErr = append(fieldErr, translatedErr)
 	}
 	return true, fieldErr
+}
+
+// Custom validator to check if the field is of type time.Time and is not the zero value
+func notZeroTime(fl validator.FieldLevel) bool {
+	t, ok := fl.Field().Interface().(time.Time)
+	return ok && !t.IsZero()
 }
