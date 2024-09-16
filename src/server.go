@@ -31,5 +31,6 @@ func main() {
 	routers.UserCtrl(app)
 	routers.LabelCtrl(app)
 
-  server.RunTLS(":443", os.Getenv("FULLCHAIN"), os.Getenv("PRIVKEY"))
+	// server.RunTLS(":443", os.Getenv("FULLCHAIN"), os.Getenv("PRIVKEY"))
+	server.Run()
 }
