@@ -1,0 +1,17 @@
+services:
+  address:
+    image: golang:1.23.1
+    container_name: looptask
+    environment:
+      MONGO_URI: ${MONGO_URI}
+      SCHEMA: looptask
+      MODE: debug
+      PORT: 8080
+      JWTKEY: ${JWTKEY}
+    volumes:
+      - .:/usr/app
+    working_dir: /usr/app
+    ports:
+      - 8080:8080
+    command: sh -c "go build -v -o server ./src/server.go && ./server"
+

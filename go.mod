@@ -1,6 +1,6 @@
 module github.com/grrlopes/go-looptask
 
-go 1.21.5
+go 1.23.1
 
 require (
 	github.com/gin-contrib/cors v1.7.2
