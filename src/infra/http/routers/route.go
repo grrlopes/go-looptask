@@ -27,6 +27,6 @@ func LabelCtrl(app gin.IRouter) {
 	app.POST("/createlabelstack", middleware.AuthUserToken(), controllers.CreateTrayStack())
 	app.POST("/createlabeled", middleware.AuthUserToken(), controllers.CreateLabel())
 	app.GET("/fetchonelabel", middleware.AuthUserToken(), controllers.FetchOneTray())
-	app.GET("/listalltraystack", middleware.AuthUserToken(), controllers.ListAllTrayStack())
+	app.GET("/listalltraystack", controllers.ListAllTrayStack())
 	app.POST("/fetchtraystackbydate", middleware.AuthUserToken(), controllers.FetchTrayStackByDate())
 }
