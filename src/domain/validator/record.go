@@ -30,7 +30,8 @@ type _validate interface {
 		entity.UserId |
 		entity.TrayId |
 		entity.LabelTrayStack |
-		entity.TrayStacked
+		entity.TrayStacked |
+		entity.ValidateJwt
 }
 
 func Validate[T _validate](entity *T) (error bool, field FieldValidation) {

@@ -16,6 +16,7 @@ func AuthCtrl(app gin.IRouter) {
 	})
 
 	app.POST("/login", controllers.Login())
+  app.POST("/validatejwt", controllers.ValidateJwt())
 }
 
 func UserCtrl(app gin.IRouter) {
