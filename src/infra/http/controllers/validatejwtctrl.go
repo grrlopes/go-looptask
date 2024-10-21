@@ -38,7 +38,7 @@ func ValidateJwt() gin.HandlerFunc {
 			return
 		}
 
-		data := presenters.JwtSuccess(tokenize.Token)
+		data := presenters.ValidJwtSuccess(tokenize.Token)
 
 		c.JSON(http.StatusOK, data)
 	}

@@ -3,6 +3,7 @@ package presenters
 import (
 	"github.com/grrlopes/go-looptask/src/domain/entity"
 	"github.com/grrlopes/go-looptask/src/domain/validator"
+	"github.com/grrlopes/go-looptask/src/helper"
 )
 
 func JwtSuccess(data string) map[string]interface{} {
@@ -42,5 +43,19 @@ func HeaderFailed() errorOuput {
 		"error":   "Invalid: Authorization header format",
 		"message": "",
 		"success": false,
+	}
+}
+
+func ValidJwtSuccess(data string) errorOuput {
+	info := helper.GetUserInfoJwt(data)
+	return errorOuput{
+		"error":   nil,
+		"message": nil,
+		"success": true,
+		"valid":   true,
+		"claims": map[string]interface{}{
+			"sub": info.ID.Hex(),
+			"exp": info.ExpiresAt,
+		},
 	}
 }
