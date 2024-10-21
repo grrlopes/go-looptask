@@ -49,9 +49,6 @@ func HeaderFailed() errorOuput {
 func ValidJwtSuccess(data string) errorOuput {
 	info := helper.GetUserInfoJwt(data)
 	return errorOuput{
-		"error":   nil,
-		"message": nil,
-		"success": true,
 		"valid":   true,
 		"claims": map[string]interface{}{
 			"sub": info.ID.Hex(),
