@@ -49,10 +49,17 @@ func HeaderFailed() errorOuput {
 func ValidJwtSuccess(data string) errorOuput {
 	info := helper.GetUserInfoJwt(data)
 	return errorOuput{
-		"valid":   true,
+		"valid": true,
 		"claims": map[string]interface{}{
 			"sub": info.ID.Hex(),
 			"exp": info.ExpiresAt,
 		},
+	}
+}
+
+func ValidJwtFailed() errorOuput {
+	return errorOuput{
+		"valid": false,
+		"error": "Token is not valid.",
 	}
 }

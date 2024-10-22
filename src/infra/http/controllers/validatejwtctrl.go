@@ -33,7 +33,7 @@ func ValidateJwt() gin.HandlerFunc {
 
 		err := helper.VerifyJwt(tokenize.Token)
 		if err != nil {
-			error := presenters.JwtError(tokenize)
+			error := presenters.ValidJwtFailed()
 			c.JSON(http.StatusUnauthorized, error)
 			return
 		}
