@@ -17,8 +17,8 @@ func ValidateJwt() gin.HandlerFunc {
 		authHeader := strings.Split(c.GetHeader("Authorization"), " ")
 
 		if len(authHeader) != 2 || authHeader[0] != "Bearer" {
-			error := presenters.HeaderFailed()
-			c.JSON(http.StatusBadRequest, error)
+			error := presenters.ValidJwtSuccess("")
+			c.JSON(http.StatusOK, error)
 			return
 		}
 

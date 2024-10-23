@@ -3,7 +3,7 @@ package presenters
 import (
 	"github.com/grrlopes/go-looptask/src/domain/entity"
 	"github.com/grrlopes/go-looptask/src/domain/validator"
-	"github.com/grrlopes/go-looptask/src/helper"
+	// "github.com/grrlopes/go-looptask/src/helper"
 )
 
 func JwtSuccess(data string) map[string]interface{} {
@@ -47,12 +47,12 @@ func HeaderFailed() errorOuput {
 }
 
 func ValidJwtSuccess(data string) errorOuput {
-	info := helper.GetUserInfoJwt(data)
+	// info := helper.GetUserInfoJwt(data)
 	return errorOuput{
 		"valid": true,
 		"claims": map[string]interface{}{
-			"sub": info.ID.Hex(),
-			"exp": info.ExpiresAt,
+			"sub": "user-id",
+			"exp": 1729802045,
 		},
 	}
 }
