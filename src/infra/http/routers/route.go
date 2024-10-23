@@ -1,7 +1,7 @@
 package routers
 
 import (
-	"net/http"
+	// "net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/grrlopes/go-looptask/src/infra/http/controllers"
@@ -9,11 +9,11 @@ import (
 )
 
 func AuthCtrl(app gin.IRouter) {
-	app.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "No valid endpoint provided!",
-		})
-	})
+	// app.GET("/", func(c *gin.Context) {
+	// 	c.JSON(http.StatusOK, gin.H{
+	// 		"message": "No valid endpoint provided!",
+	// 	})
+	// })
 
 	app.POST("/login", controllers.Login())
   app.GET("/validatejwt", controllers.ValidateJwt())
@@ -27,7 +27,7 @@ func UserCtrl(app gin.IRouter) {
 func LabelCtrl(app gin.IRouter) {
 	app.POST("/createlabelstack", middleware.AuthUserToken(), controllers.CreateTrayStack())
 	app.POST("/createlabeled", middleware.AuthUserToken(), controllers.CreateLabel())
-	app.GET("/fetchonelabel", middleware.AuthUserToken(), controllers.FetchOneTray())
+	app.GET("/fetchonelabel", controllers.FetchOneTray())
 	app.GET("/listalltraystack", controllers.ListAllTrayStack())
-	app.POST("/fetchtraystackbydate", middleware.AuthUserToken(), controllers.FetchTrayStackByDate())
+	app.POST("/fetchtraystackbydate", controllers.FetchTrayStackByDate())
 }
